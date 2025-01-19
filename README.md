@@ -1,7 +1,3 @@
-Here’s a refined and more polished version of your README:
-
----
-
 # raccoonai-openapi
 
 OpenAPI spec for Raccoon APIs!
