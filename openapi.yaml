@@ -406,6 +406,13 @@
                       'description': 'The raccoon passcode associated with the end user on behalf of which the call is being made.',
                       'example': '<end-user-raccoon-passcode>',
                     },
+                  'advanced':
+                    {
+                      'anyOf': [ { '$ref': '#/components/schemas/Advanced' }, { 'type': 'null' } ],
+                      'description': 'Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.',
+                      'default': { 'block_ads': false, 'solve_captchas': false, 'proxy': false },
+                      'example': { 'block_ads': true, 'proxy': true, 'solve_captchas': true },
+                    },
                 },
               'type': 'object',
               'required': ['query', 'raccoon_passcode'],
@@ -456,9 +463,16 @@
                       'description': 'Additional metadata or information related to the extraction task.',
                       'example': { 'record_count': 2, 'sessionId': '1234' },
                     },
+                  'livestream_url':
+                    {
+                      'type': 'string',
+                      'title': 'Livestream Url',
+                      'description': 'The Livestream URL',
+                      'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark'
+                    },
                 },
               'type': 'object',
-              'required': ['task_status', 'message', 'data', 'properties'],
+              'required': ['task_status', 'message', 'data', 'properties', 'livestream_url'],
               'title': 'ExtractResponse',
             },
           'HTTPValidationError':
@@ -505,6 +519,13 @@
                       'title': 'Raccoon Passcode',
                       'description': 'The raccoon passcode associated with the end user on behalf of which the call is being made.',
                     },
+                  'advanced':
+                    {
+                      'anyOf': [ { '$ref': '#/components/schemas/Advanced' }, { 'type': 'null' } ],
+                      'description': 'Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.',
+                      'default': { 'block_ads': false, 'solve_captchas': false, 'proxy': false },
+                      'example': { 'block_ads': true, 'proxy': true, 'solve_captchas': true },
+                    },
                 },
               'type': 'object',
               'required': ['raccoon_passcode'],
@@ -542,9 +563,16 @@
                       'description': 'Additional metadata or details related to the integration task.',
                       'example': { 'records_processed': 1500 },
                     },
+                  'livestream_url':
+                    {
+                      'type': 'string',
+                      'title': 'Livestream Url',
+                      'description': 'The Livestream URL',
+                      'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark'
+                    },
                 },
               'type': 'object',
-              'required': ['task_status', 'integration_id', 'message', 'properties'],
+              'required': ['task_status', 'integration_id', 'message', 'properties', 'livestream_url'],
               'title': 'IntegrationResponse',
             },
           'RunRequest':
@@ -588,6 +616,13 @@
                       'description': 'The raccoon passcode associated with the end user on behalf of which the call is being made.',
                       'example': '<end-user-raccoon-passcode>',
                     },
+                  'advanced':
+                    {
+                      'anyOf': [ { '$ref': '#/components/schemas/Advanced' }, { 'type': 'null' } ],
+                      'description': 'Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.',
+                      'default': { 'block_ads': false, 'solve_captchas': false, 'proxy': false },
+                      'example': { 'block_ads': true, 'proxy': true, 'solve_captchas': true },
+                    },
                 },
               'type': 'object',
               'required': ['query', 'raccoon_passcode'],
@@ -618,9 +653,16 @@
                       'description': 'Additional metadata or details related to the run task.',
                       'example': { 'sessionId': '1234' },
                     },
+                  'livestream_url':
+                    {
+                      'type': 'string',
+                      'title': 'Livestream Url',
+                      'description': 'The Livestream URL',
+                      'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark'
+                    },
                 },
               'type': 'object',
-              'required': ['task_status', 'message', 'properties'],
+              'required': ['task_status', 'message', 'properties', 'livestream_url'],
               'title': 'RunResponse',
             },
           'ValidationError':
@@ -692,10 +734,10 @@
                     },
                   'livestream_url':
                     {
-                        'type': 'string',
-                        'title': 'Livestream Url',
-                        'description': 'The Livestream URL',
-                        'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark',
+                      'type': 'string',
+                      'title': 'Livestream Url',
+                      'description': 'The Livestream URL',
+                      'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark',
                     },
                   'status':
                     {
@@ -706,7 +748,7 @@
                     },
                 },
               'type': 'object',
-              'required': ['session_id', 'websocket_url', 'status'],
+              'required': ['session_id', 'websocket_url', 'status', 'livestream_url'],
               'title': 'SessionCreateResponse',
             },
           'SessionLogsResponse':
