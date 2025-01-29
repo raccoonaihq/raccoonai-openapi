@@ -12,4 +12,4 @@ jobs:
 
       - uses: stoplightio/spectral-action@latest
         with:
-          file_glob: 'openapi.yaml'
+          file_glob: 'openapi.json'
