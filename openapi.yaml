@@ -690,6 +690,13 @@
                       'description': 'The WebSocket URL for interacting with the session.',
                       'example': 'wss://connect.flyingraccoon.tech/ws/6000?sessionId=session_12345',
                     },
+                  'livestream_url':
+                    {
+                        'type': 'string',
+                        'title': 'Livestream Url',
+                        'description': 'The Livestream URL',
+                        'example': 'https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark',
+                    },
                   'status':
                     {
                       'type': 'string',
