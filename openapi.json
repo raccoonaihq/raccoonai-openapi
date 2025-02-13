@@ -11,63 +11,300 @@
     { "url": "http://localhost:3800", "description": "Local" }
   ],
   "paths": {
-    "/lam/run": {
+    "/sessions/create": {
       "post": {
-        "tags": ["LAM", "Run"],
-        "summary": "Lam Run Endpoint",
-        "operationId": "lam_run",
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Fleet Websocket Session Create Endpoint",
+        "operationId": "fleet_websocket_create",
         "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RunRequest" } } },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionRequest"
+              }
+            }
+          },
           "required": true
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/RunResponse" } },
-              "text/event-stream": { "schema": { "$ref": "#/components/schemas/RunResponse" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionCreateResponse"
+                }
+              }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
             }
           }
         },
-        "security": [{ "raccoon-secret-key": [] }]
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/sessions/{session_id}/status": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Fleet Session Status Endpoint",
+        "operationId": "fleet_session_status",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/sessions/{session_id}/terminate": {
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Fleet Session Terminate Endpoint",
+        "operationId": "fleet_session_terminate",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/sessions/{session_id}/logs": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Fleet Session Logs Endpoint",
+        "operationId": "fleet_session_logs",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionLogsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/lam/run": {
+      "post": {
+        "tags": [
+          "Run"
+        ],
+        "summary": "Lam Run Endpoint",
+        "operationId": "lam_run",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
       }
     },
     "/lam/extract": {
       "post": {
-        "tags": ["LAM", "Extract"],
+        "tags": [
+          "Extract"
+        ],
         "summary": "Lam Extract Endpoint",
         "operationId": "lam_extract",
         "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExtractRequest" } } },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              }
+            }
+          },
           "required": true
         },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/ExtractResponse" } },
-              "text/event-stream": { "schema": { "$ref": "#/components/schemas/ExtractResponse" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractResponse"
+                }
+              }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
             }
           }
         },
-        "security": [{ "raccoon-secret-key": [] }]
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
       }
     },
     "/lam/{app_name}/run": {
       "post": {
-        "tags": ["LAM", "Integration"],
+        "tags": [
+          "Integration"
+        ],
         "summary": "Lam Integrations Endpoint",
         "operationId": "lam_integration",
         "parameters": [
@@ -75,13 +312,20 @@
             "name": "app_name",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "title": "App Name" }
+            "schema": {
+              "type": "string",
+              "title": "App Name"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/IntegrationRequest" } }
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegrationRequest"
+              }
+            }
           }
         },
         "responses": {
@@ -93,167 +337,97 @@
                   "anyOf": [
                     {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/IntegrationResponse" }
+                      "items": {
+                        "$ref": "#/components/schemas/IntegrationResponse"
+                      }
                     },
-                    { "$ref": "#/components/schemas/IntegrationResponse" }
+                    {
+                      "$ref": "#/components/schemas/IntegrationResponse"
+                    }
                   ],
                   "title": "Response Lam Integration",
                   "type": "array",
-                  "items": { "$ref": "#/components/schemas/IntegrationResponse" }
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationResponse"
+                  }
                 }
               },
-              "text/event-stream": { "schema": { "$ref": "#/components/schemas/IntegrationResponse" } }
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationResponse"
+                }
+              }
             }
           },
           "422": {
             "description": "Validation Error",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
             }
           }
         },
-        "security": [{ "raccoon-secret-key": [] }]
-      }
-    },
-    "/sessions/create": {
-      "post": {
-        "tags": ["Fleet", "Sessions"],
-        "summary": "Fleet Websocket Session Create Endpoint",
-        "operationId": "fleet_websocket_create",
-        "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SessionRequest" } } },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/SessionCreateResponse" } }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
-            }
-          }
-        },
-        "security": [{ "raccoon-secret-key": [] }],
-        "servers": [
-          { "url": "https://fleet.flyingraccoon.tech", "description": "Fleet Production" },
-          { "url": "https://fleet-staging.flyingraccoon.tech", "description": "Fleet Staging" },
-          { "url": "http://localhost:3801", "description": "Fleet Local" }
-        ]
-      }
-    },
-    "/sessions/{session_id}/status": {
-      "get": {
-        "tags": ["Fleet", "Sessions"],
-        "summary": "Fleet Session Status Endpoint",
-        "operationId": "fleet_session_status",
-        "parameters": [
+        "security": [
           {
-            "name": "session_id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "title": "Session Id" }
+            "raccoon-secret-key": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/SessionResponse" } }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
-            }
-          }
-        },
-        "security": [{ "raccoon-secret-key": [] }],
-        "servers": [
-          { "url": "https://fleet.flyingraccoon.tech", "description": "Fleet Production" },
-          { "url": "https://fleet-staging.flyingraccoon.tech", "description": "Fleet Staging" },
-          { "url": "http://localhost:3801", "description": "Fleet Local" }
-        ]
-      }
-    },
-    "/sessions/{session_id}/terminate": {
-      "delete": {
-        "tags": ["Fleet", "Sessions"],
-        "summary": "Fleet Session Terminate Endpoint",
-        "operationId": "fleet_session_terminate",
-        "parameters": [
-          {
-            "name": "session_id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "title": "Session Id" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/SessionResponse" } }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
-            }
-          }
-        },
-        "security": [{ "raccoon-secret-key": [] }],
-        "servers": [
-          { "url": "https://fleet.flyingraccoon.tech", "description": "Fleet Production" },
-          { "url": "https://fleet-staging.flyingraccoon.tech", "description": "Fleet Staging" },
-          { "url": "http://localhost:3801", "description": "Fleet Local" }
-        ]
-      }
-    },
-    "/sessions/{session_id}/logs": {
-      "get": {
-        "tags": ["Fleet", "Sessions"],
-        "summary": "Fleet Session Logs Endpoint",
-        "operationId": "fleet_session_logs",
-        "parameters": [
-          {
-            "name": "session_id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "title": "Session Id" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/SessionLogsResponse" } }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/HTTPValidationError" } }
-            }
-          }
-        },
-        "security": [{ "raccoon-secret-key": [] }],
-        "servers": [
-          { "url": "https://fleet.flyingraccoon.tech", "description": "Fleet Production" },
-          { "url": "https://fleet-staging.flyingraccoon.tech", "description": "Fleet Staging" },
-          { "url": "http://localhost:3801", "description": "Fleet Local" }
         ]
       }
     }
   },
   "components": {
     "schemas": {
+      "Advanced": {
+        "properties": {
+          "block_ads": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Block Ads",
+            "description": "Whether to block advertisements during the browser session.",
+            "default": false,
+            "example": true
+          },
+          "solve_captchas": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solve Captchas",
+            "description": "Whether to attempt automatic CAPTCHA solving.",
+            "default": false,
+            "example": true
+          },
+          "proxy": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proxy",
+            "description": "Whether to use a proxy for the browser session.",
+            "default": false,
+            "example": true
+          }
+        },
+        "type": "object",
+        "title": "Advanced"
+      },
       "ExtractRequest": {
         "properties": {
           "query": {
@@ -263,13 +437,30 @@
             "example": "Find YCombinator startups who got funded in W24."
           },
           "chat_history": {
-            "anyOf": [{ "items": { "type": "object" }, "type": "array" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Chat History",
             "description": "The history of the conversation as a list of messages or objects you might use while building a chat app to give the model context of the past conversation.",
             "example": []
           },
           "app_url": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "App Url",
             "description": "This is the entrypoint URL for the web agent.",
             "default": "",
@@ -289,14 +480,28 @@
             }
           },
           "max_count": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Max Count",
             "description": "The maximum number of results to extract.",
             "default": 1,
             "example": 5
           },
           "stream": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Stream",
             "description": "Whether the response should be streamed back or not.",
             "default": false,
@@ -309,14 +514,32 @@
             "example": "<end-user-raccoon-passcode>"
           },
           "advanced": {
-            "anyOf": [{ "$ref": "#/components/schemas/Advanced" }, { "type": "null" }],
-            "description": "Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.",
-            "default": { "block_ads": false, "solve_captchas": false, "proxy": false },
-            "example": { "block_ads": true, "proxy": true, "solve_captchas": true }
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Advanced"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
+            "default": {
+              "block_ads": false,
+              "solve_captchas": false,
+              "proxy": false
+            },
+            "example": {
+              "block_ads": true,
+              "proxy": true,
+              "solve_captchas": true
+            }
           }
         },
         "type": "object",
-        "required": ["query", "raccoon_passcode"],
+        "required": [
+          "query",
+          "raccoon_passcode"
+        ],
         "title": "ExtractRequest"
       },
       "ExtractResponse": {
@@ -334,18 +557,26 @@
             "example": "I am applying W24 filter in startup directory to find the relevant companies."
           },
           "data": {
-            "items": { "type": "object" },
+            "items": {
+              "type": "object"
+            },
             "type": "array",
             "title": "Data",
             "description": "The extracted data as a list of objects when the status is DONE. Each object represents an extracted entity.",
             "example": [
               {
-                "address": { "city": "San Francisco", "country": "USA" },
+                "address": {
+                  "city": "San Francisco",
+                  "country": "USA"
+                },
                 "funding_season": "W24",
                 "name": "Granza Bio"
               },
               {
-                "address": { "city": "London", "country": "United Kingdom" },
+                "address": {
+                  "city": "London",
+                  "country": "United Kingdom"
+                },
                 "funding_season": "W24",
                 "name": "Konstructly"
               }
@@ -355,23 +586,34 @@
             "type": "object",
             "title": "Properties",
             "description": "Additional metadata or information related to the extraction task.",
-            "example": { "record_count": 2, "sessionId": "1234" }
+            "example": {
+              "record_count": 2,
+              "sessionId": "1234"
+            }
           },
           "livestream_url": {
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           }
         },
         "type": "object",
-        "required": ["task_status", "message", "data", "properties", "livestream_url"],
+        "required": [
+          "task_status",
+          "message",
+          "data",
+          "properties",
+          "livestream_url"
+        ],
         "title": "ExtractResponse"
       },
       "HTTPValidationError": {
         "properties": {
           "detail": {
-            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
             "type": "array",
             "title": "Detail"
           }
@@ -382,21 +624,42 @@
       "IntegrationRequest": {
         "properties": {
           "properties": {
-            "anyOf": [{ "type": "object" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Properties",
             "description": "Additional properties or data related to the particular integration."
           },
           "integration_id": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Integration Id",
             "description": "The unique identifier for the integration being called.",
             "default": ""
           },
           "stream": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Stream",
             "description": "Whether the response should be streamed back or not.",
-            "default": true
+            "default": false
           },
           "raccoon_passcode": {
             "type": "string",
@@ -404,14 +667,31 @@
             "description": "The raccoon passcode associated with the end user on behalf of which the call is being made."
           },
           "advanced": {
-            "anyOf": [{ "$ref": "#/components/schemas/Advanced" }, { "type": "null" }],
-            "description": "Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.",
-            "default": { "block_ads": false, "solve_captchas": false, "proxy": false },
-            "example": { "block_ads": true, "proxy": true, "solve_captchas": true }
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Advanced"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
+            "default": {
+              "block_ads": false,
+              "solve_captchas": false,
+              "proxy": false
+            },
+            "example": {
+              "block_ads": true,
+              "proxy": true,
+              "solve_captchas": true
+            }
           }
         },
         "type": "object",
-        "required": ["raccoon_passcode"],
+        "required": [
+          "raccoon_passcode"
+        ],
         "title": "IntegrationRequest"
       },
       "IntegrationResponse": {
@@ -419,7 +699,7 @@
           "task_status": {
             "type": "string",
             "title": "Task Status",
-            "description": "The current status of the integration task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
+            "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
             "example": "DONE"
           },
           "integration_id": {
@@ -438,17 +718,25 @@
             "type": "object",
             "title": "Properties",
             "description": "Additional metadata or details related to the integration task.",
-            "example": { "records_processed": 1500 }
+            "example": {
+              "records_processed": 1500
+            }
           },
           "livestream_url": {
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           }
         },
         "type": "object",
-        "required": ["task_status", "integration_id", "message", "properties", "livestream_url"],
+        "required": [
+          "task_status",
+          "integration_id",
+          "message",
+          "properties",
+          "livestream_url"
+        ],
         "title": "IntegrationResponse"
       },
       "RunRequest": {
@@ -460,20 +748,44 @@
             "example": "Find the price of iphone 16 on Amazon."
           },
           "chat_history": {
-            "anyOf": [{ "items": { "type": "object" }, "type": "array" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Chat History",
             "description": "The history of the conversation as a list of messages or objects you might use while building a chat app to give the model context of the past conversation.",
             "example": []
           },
           "app_url": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "App Url",
             "description": "This is the entrypoint URL for the web agent.",
             "default": "",
             "example": "https://www.amazon.com"
           },
           "stream": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Stream",
             "description": "Whether the response should be streamed back or not.",
             "default": false,
@@ -486,14 +798,32 @@
             "example": "<end-user-raccoon-passcode>"
           },
           "advanced": {
-            "anyOf": [{ "$ref": "#/components/schemas/Advanced" }, { "type": "null" }],
-            "description": "Advanced configuration options for the task, such as ad-blocking and CAPTCHA solving.",
-            "default": { "block_ads": false, "solve_captchas": false, "proxy": false },
-            "example": { "block_ads": true, "proxy": true, "solve_captchas": true }
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Advanced"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
+            "default": {
+              "block_ads": false,
+              "solve_captchas": false,
+              "proxy": false
+            },
+            "example": {
+              "block_ads": true,
+              "proxy": true,
+              "solve_captchas": true
+            }
           }
         },
         "type": "object",
-        "required": ["query", "raccoon_passcode"],
+        "required": [
+          "query",
+          "raccoon_passcode"
+        ],
         "title": "RunRequest"
       },
       "RunResponse": {
@@ -501,7 +831,7 @@
           "task_status": {
             "type": "string",
             "title": "Task Status",
-            "description": "The current status of the run task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
+            "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
             "example": "DONE"
           },
           "message": {
@@ -514,59 +844,25 @@
             "type": "object",
             "title": "Properties",
             "description": "Additional metadata or details related to the run task.",
-            "example": { "sessionId": "1234" }
+            "example": {
+              "sessionId": "1234"
+            }
           },
           "livestream_url": {
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           }
         },
         "type": "object",
-        "required": ["task_status", "message", "properties", "livestream_url"],
+        "required": [
+          "task_status",
+          "message",
+          "properties",
+          "livestream_url"
+        ],
         "title": "RunResponse"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
-            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
-            "type": "array",
-            "title": "Location"
-          },
-          "msg": { "type": "string", "title": "Message" },
-          "type": { "type": "string", "title": "Error Type" }
-        },
-        "type": "object",
-        "required": ["loc", "msg", "type"],
-        "title": "ValidationError"
-      },
-      "Advanced": {
-        "properties": {
-          "block_ads": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
-            "title": "Block Ads",
-            "description": "Whether to block advertisements during the browser session.",
-            "default": false,
-            "example": true
-          },
-          "solve_captchas": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
-            "title": "Solve Captchas",
-            "description": "Whether to attempt automatic CAPTCHA solving.",
-            "default": false,
-            "example": true
-          },
-          "proxy": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
-            "title": "Proxy",
-            "description": "Whether to use a proxy for the browser session.",
-            "default": false,
-            "example": true
-          }
-        },
-        "type": "object",
-        "title": "Advanced"
       },
       "SessionCreateResponse": {
         "properties": {
@@ -586,7 +882,7 @@
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://fleet.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           },
           "status": {
             "type": "string",
@@ -596,7 +892,12 @@
           }
         },
         "type": "object",
-        "required": ["session_id", "websocket_url", "status", "livestream_url"],
+        "required": [
+          "session_id",
+          "websocket_url",
+          "livestream_url",
+          "status"
+        ],
         "title": "SessionCreateResponse"
       },
       "SessionLogsResponse": {
@@ -615,63 +916,144 @@
           }
         },
         "type": "object",
-        "required": ["session_id", "session_logs"],
+        "required": [
+          "session_id",
+          "session_logs"
+        ],
         "title": "SessionLogsResponse"
       },
       "SessionRequest": {
         "properties": {
           "raccoon_passcode": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Raccoon Passcode",
             "description": "The raccoon passcode associated with the end user on behalf of which the call is being made if any.",
             "example": "<end-user-raccoon-passcode>"
           },
           "app_name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "App Name",
             "description": "The name of the app for which the session is going to run for, used for streamlining authentication.",
             "example": "uber"
           },
           "url": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Url",
             "description": "The entrypoint url for the session.",
             "default": "https://www.google.com",
             "example": "https://www.google.com"
           },
           "browser_type": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Browser Type",
             "description": "The type of browser to use. Supported values include 'chromium', 'firefox', and 'webkit'.",
             "default": "chromium",
             "example": "chromium"
           },
           "settings": {
-            "anyOf": [{ "$ref": "#/components/schemas/Settings" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Settings"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Configuration settings for the browser, such as viewport size and User-Agent string.",
-            "default": { "viewport": { "height": 768, "width": 1366 }, "locales": ["en-US"] },
+            "default": {
+              "viewport": {
+                "height": 720,
+                "width": 1280
+              },
+              "locales": [
+                "en-US"
+              ]
+            },
             "example": {
-              "locales": ["en-US", "fr-FR"],
+              "locales": [
+                "en-US",
+                "fr-FR"
+              ],
               "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-              "viewport": { "height": 1080, "width": 1920 }
+              "viewport": {
+                "height": 720,
+                "width": 1280
+              }
             }
           },
           "advanced": {
-            "anyOf": [{ "$ref": "#/components/schemas/Advanced" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Advanced"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
-            "default": { "block_ads": false, "solve_captchas": false, "proxy": false },
-            "example": { "block_ads": true, "proxy": true, "solve_captchas": true }
+            "default": {
+              "block_ads": false,
+              "solve_captchas": false,
+              "proxy": false
+            },
+            "example": {
+              "block_ads": true,
+              "proxy": true,
+              "solve_captchas": true
+            }
           },
           "headless": {
-            "anyOf": [{ "type": "boolean" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Headless",
             "description": "Whether to run the browser in headless mode.",
             "default": false,
             "example": true
           },
           "session_timeout": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
-            "title": "Timeout",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Timeout",
             "description": "The timeout for the browser session in seconds.",
             "default": 300,
             "example": 600
@@ -696,37 +1078,121 @@
           }
         },
         "type": "object",
-        "required": ["session_id", "status"],
+        "required": [
+          "session_id",
+          "status"
+        ],
         "title": "SessionResponse"
       },
       "Settings": {
         "properties": {
           "user_agent": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "User Agent",
             "description": "The User-Agent string to use for the browser. Defaults to internal auto user-agent rotation mechanism.",
             "example": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
           },
           "viewport": {
-            "anyOf": [{ "additionalProperties": { "type": "integer" }, "type": "object" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Viewport",
             "description": "The viewport size (screen dimensions) for the browser in pixels.",
-            "default": { "width": 1366, "height": 768 },
-            "example": { "height": 1080, "width": 1920 }
+            "default": {
+              "width": 1280,
+              "height": 720
+            },
+            "example": {
+              "height": 720,
+              "width": 1280
+            }
           },
           "locales": {
-            "anyOf": [{ "items": { "type": "string" }, "type": "array" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Locales",
             "description": "A list of locales or languages to use for the browser session. These determine language preferences.",
-            "default": ["en-US"],
-            "example": ["en-US", "fr-FR"]
+            "default": [
+              "en-US"
+            ],
+            "example": [
+              "en-US",
+              "fr-FR"
+            ]
           }
         },
         "type": "object",
         "title": "Settings"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     },
-    "securitySchemes": { "raccoon-secret-key": { "type": "apiKey", "in": "header", "name": "raccoon-secret-key" } }
+    "securitySchemes": {
+      "raccoon-secret-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "raccoon-secret-key"
+      }
+    }
   },
-  "security": [{ "raccoon-secret-key": [] }]
+  "security": [
+    {
+      "raccoon-secret-key": []
+    }
+  ]
 }
