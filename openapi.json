@@ -216,7 +216,7 @@
         "operationId": "get_tasks",
         "parameters": [
           {
-            "name": "startTime",
+            "name": "start_time",
             "in": "query",
             "required": false,
             "schema": {
@@ -228,11 +228,16 @@
                   "type": "null"
                 }
               ],
-              "title": "Starttime"
-            }
+              "description": "Filter tasks created after this Unix timestamp (in milliseconds).",
+              "examples": [
+                1678886400000
+              ],
+              "title": "Start Time"
+            },
+            "description": "Filter tasks created after this Unix timestamp (in milliseconds)."
           },
           {
-            "name": "endTime",
+            "name": "end_time",
             "in": "query",
             "required": false,
             "schema": {
@@ -244,11 +249,16 @@
                   "type": "null"
                 }
               ],
-              "title": "Endtime"
-            }
+              "description": "Filter tasks created before this Unix timestamp (in milliseconds).",
+              "examples": [
+                1678972800000
+              ],
+              "title": "End Time"
+            },
+            "description": "Filter tasks created before this Unix timestamp (in milliseconds)."
           },
           {
-            "name": "taskId",
+            "name": "task_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -260,8 +270,13 @@
                   "type": "null"
                 }
               ],
-              "title": "Taskid"
-            }
+              "description": "Filter tasks by a specific task ID.",
+              "examples": [
+                "task_123"
+              ],
+              "title": "Task Id"
+            },
+            "description": "Filter tasks by a specific task ID."
           },
           {
             "name": "page",
@@ -277,9 +292,14 @@
                   "type": "null"
                 }
               ],
+              "description": "Page number for pagination.",
+              "examples": [
+                1
+              ],
               "default": 1,
               "title": "Page"
-            }
+            },
+            "description": "Page number for pagination."
           },
           {
             "name": "limit",
@@ -296,12 +316,49 @@
                   "type": "null"
                 }
               ],
+              "description": "Number of tasks per page (maximum 100).",
+              "examples": [
+                20
+              ],
               "default": 10,
               "title": "Limit"
-            }
+            },
+            "description": "Number of tasks per page (maximum 100)."
           },
           {
-            "name": "sortBy",
+            "name": "executionType[]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "run",
+                      "extract",
+                      "fleet"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter tasks by execution type (e.g., 'run', 'extract').",
+              "examples": [
+                [
+                  "run",
+                  "extract"
+                ]
+              ],
+              "title": "Executiontype[]"
+            },
+            "description": "Filter tasks by execution type (e.g., 'run', 'extract')."
+          },
+          {
+            "name": "sort_by",
             "in": "query",
             "required": false,
             "schema": {
@@ -320,12 +377,17 @@
                   "type": "null"
                 }
               ],
+              "description": "Field to sort tasks by (e.g., 'timestamp', 'executionTime').",
+              "examples": [
+                "timestamp"
+              ],
               "default": "timestamp",
-              "title": "Sortby"
-            }
+              "title": "Sort By"
+            },
+            "description": "Field to sort tasks by (e.g., 'timestamp', 'executionTime')."
           },
           {
-            "name": "sortOrder",
+            "name": "sort_order",
             "in": "query",
             "required": false,
             "schema": {
@@ -341,12 +403,17 @@
                   "type": "null"
                 }
               ],
+              "description": "Sort order ('ascend' or 'descend').",
+              "examples": [
+                "ascend"
+              ],
               "default": "descend",
-              "title": "Sortorder"
-            }
+              "title": "Sort Order"
+            },
+            "description": "Sort order ('ascend' or 'descend')."
           },
           {
-            "name": "raccoonPasscode",
+            "name": "raccoon_passcode",
             "in": "query",
             "required": false,
             "schema": {
@@ -358,35 +425,15 @@
                   "type": "null"
                 }
               ],
-              "title": "Raccoonpasscode"
-            }
+              "description": "Filter tasks by Raccoon passcode.",
+              "examples": [
+                "code123"
+              ],
+              "title": "Raccoon Passcode"
+            },
+            "description": "Filter tasks by Raccoon passcode."
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "enum": [
-                        "run",
-                        "extract",
-                        "fleet"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "title": "Executiontype"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -425,7 +472,7 @@
         "operationId": "get_sessions",
         "parameters": [
           {
-            "name": "startTime",
+            "name": "start_time",
             "in": "query",
             "required": false,
             "schema": {
@@ -437,11 +484,16 @@
                   "type": "null"
                 }
               ],
-              "title": "Starttime"
-            }
+              "description": "Filter sessions created after this Unix timestamp (in milliseconds).",
+              "examples": [
+                1678886400000
+              ],
+              "title": "Start Time"
+            },
+            "description": "Filter sessions created after this Unix timestamp (in milliseconds)."
           },
           {
-            "name": "endTime",
+            "name": "end_time",
             "in": "query",
             "required": false,
             "schema": {
@@ -453,11 +505,16 @@
                   "type": "null"
                 }
               ],
-              "title": "Endtime"
-            }
+              "description": "Filter sessions created before this Unix timestamp (in milliseconds).",
+              "examples": [
+                1678972800000
+              ],
+              "title": "End Time"
+            },
+            "description": "Filter sessions created before this Unix timestamp (in milliseconds)."
           },
           {
-            "name": "sessionId",
+            "name": "session_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -469,11 +526,16 @@
                   "type": "null"
                 }
               ],
-              "title": "Sessionid"
-            }
+              "description": "Filter sessions by a specific session ID.",
+              "examples": [
+                "session_456"
+              ],
+              "title": "Session Id"
+            },
+            "description": "Filter sessions by a specific session ID."
           },
           {
-            "name": "taskId",
+            "name": "task_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -485,8 +547,13 @@
                   "type": "null"
                 }
               ],
-              "title": "Taskid"
-            }
+              "description": "Filter sessions by a specific task ID.",
+              "examples": [
+                "task_123"
+              ],
+              "title": "Task Id"
+            },
+            "description": "Filter sessions by a specific task ID."
           },
           {
             "name": "page",
@@ -502,9 +569,14 @@
                   "type": "null"
                 }
               ],
+              "description": "Page number for pagination.",
+              "examples": [
+                2
+              ],
               "default": 1,
               "title": "Page"
-            }
+            },
+            "description": "Page number for pagination."
           },
           {
             "name": "limit",
@@ -521,12 +593,48 @@
                   "type": "null"
                 }
               ],
+              "description": "Number of sessions per page (maximum 100).",
+              "examples": [
+                15
+              ],
               "default": 10,
               "title": "Limit"
-            }
+            },
+            "description": "Number of sessions per page (maximum 100)."
           },
           {
-            "name": "sortBy",
+            "name": "executionType[]",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "run",
+                      "extract",
+                      "fleet"
+                    ],
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter sessions by execution type (e.g., 'run', 'extract').",
+              "examples": [
+                [
+                  "run"
+                ]
+              ],
+              "title": "Executiontype[]"
+            },
+            "description": "Filter sessions by execution type (e.g., 'run', 'extract')."
+          },
+          {
+            "name": "sort_by",
             "in": "query",
             "required": false,
             "schema": {
@@ -545,12 +653,17 @@
                   "type": "null"
                 }
               ],
+              "description": "Field to sort sessions by (e.g., 'timestamp', 'executionTime').",
+              "examples": [
+                "timestamp"
+              ],
               "default": "timestamp",
-              "title": "Sortby"
-            }
+              "title": "Sort By"
+            },
+            "description": "Field to sort sessions by (e.g., 'timestamp', 'executionTime')."
           },
           {
-            "name": "sortOrder",
+            "name": "sort_order",
             "in": "query",
             "required": false,
             "schema": {
@@ -566,12 +679,17 @@
                   "type": "null"
                 }
               ],
+              "description": "Sort order ('ascend' or 'descend').",
+              "examples": [
+                "ascend"
+              ],
               "default": "descend",
-              "title": "Sortorder"
-            }
+              "title": "Sort Order"
+            },
+            "description": "Sort order ('ascend' or 'descend')."
           },
           {
-            "name": "raccoonPasscode",
+            "name": "raccoon_passcode",
             "in": "query",
             "required": false,
             "schema": {
@@ -583,35 +701,15 @@
                   "type": "null"
                 }
               ],
-              "title": "Raccoonpasscode"
-            }
+              "description": "Filter sessions by Raccoon passcode.",
+              "examples": [
+                "code456"
+              ],
+              "title": "Raccoon Passcode"
+            },
+            "description": "Filter sessions by Raccoon passcode."
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "enum": [
-                        "run",
-                        "extract",
-                        "fleet"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "title": "Executiontype"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
