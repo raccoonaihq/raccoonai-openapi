@@ -3,12 +3,21 @@
   "info": {
     "title": "Raccoon AI API",
     "description": "The Raccoon AI REST API. Find the documentation here: https://docs.flyingraccoon.tech/",
-    "version": "0.0.1"
+    "version": "0.1.0"
   },
   "servers": [
-    { "url": "https://api.flyingraccoon.tech", "description": "Production" },
-    { "url": "https://staging.flyingraccoon.tech", "description": "Staging" },
-    { "url": "http://localhost:3800", "description": "Local" }
+    {
+      "url": "https://api.flyingraccoon.tech",
+      "description": "Production"
+    },
+    {
+      "url": "https://staging.flyingraccoon.tech",
+      "description": "Staging"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Local"
+    }
   ],
   "paths": {
     "/sessions/create": {
@@ -198,22 +207,185 @@
         ]
       }
     },
-    "/lam/run": {
-      "post": {
+    "/lam/tasks": {
+      "get": {
         "tags": [
-          "Run"
+          "LAM"
         ],
-        "summary": "Lam Run Endpoint",
-        "operationId": "lam_run",
+        "summary": "Get Tasks Endpoint",
+        "operationId": "get_tasks",
+        "parameters": [
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Starttime"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Endtime"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Taskid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 100,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "timestamp",
+                    "executionTime",
+                    "taskId",
+                    "status",
+                    "executionType"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "timestamp",
+              "title": "Sortby"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ascend",
+                    "descend"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "descend",
+              "title": "Sortorder"
+            }
+          },
+          {
+            "name": "raccoonPasscode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Raccoonpasscode"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RunRequest"
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "run",
+                        "extract",
+                        "fleet"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Executiontype"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -221,12 +393,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RunResponse"
-                }
-              },
-              "text/event-stream": {
-                "schema": {
-                  "$ref": "#/components/schemas/RunResponse"
+                  "$ref": "#/components/schemas/TaskListResponse"
                 }
               }
             }
@@ -249,18 +416,267 @@
         ]
       }
     },
-    "/lam/extract": {
-      "post": {
+    "/sessions": {
+      "get": {
         "tags": [
-          "Extract"
+          "Sessions"
         ],
-        "summary": "Lam Extract Endpoint",
-        "operationId": "lam_extract",
+        "summary": "Get Sessions Endpoint",
+        "operationId": "get_sessions",
+        "parameters": [
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Starttime"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Endtime"
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sessionid"
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Taskid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 50,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "timestamp",
+                    "executionTime",
+                    "taskId",
+                    "status",
+                    "executionType"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "timestamp",
+              "title": "Sortby"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ascend",
+                    "descend"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "descend",
+              "title": "Sortorder"
+            }
+          },
+          {
+            "name": "raccoonPasscode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Raccoonpasscode"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExtractRequest"
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "enum": [
+                        "run",
+                        "extract",
+                        "fleet"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Executiontype"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/extensions": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "List Extensions Endpoint",
+        "operationId": "list_extensions",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtensionListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Upload Extension Endpoint",
+        "operationId": "upload_extension",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_extension"
               }
             }
           },
@@ -272,12 +688,448 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExtractResponse"
+                  "$ref": "#/components/schemas/ExtensionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/extensions/{extensionId}": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Get Extension Endpoint",
+        "operationId": "get_extension",
+        "parameters": [
+          {
+            "name": "extensionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the extension",
+              "title": "Extensionid"
+            },
+            "description": "The ID of the extension"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtensionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Delete Extension Endpoint",
+        "operationId": "delete_extension",
+        "parameters": [
+          {
+            "name": "extensionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the extension to delete",
+              "title": "Extensionid"
+            },
+            "description": "The ID of the extension to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/tail/linked-apps": {
+      "get": {
+        "tags": [
+          "Tail"
+        ],
+        "summary": "Get Linked Apps Endpoint",
+        "operationId": "get_linked_apps",
+        "parameters": [
+          {
+            "name": "raccoonPasscode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Raccoonpasscode"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAppsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/tail/app/auth-status": {
+      "get": {
+        "tags": [
+          "Tail"
+        ],
+        "summary": "Get Auth Status Endpoint",
+        "operationId": "get_auth_status",
+        "parameters": [
+          {
+            "name": "raccoonPasscode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Raccoonpasscode"
+            }
+          },
+          {
+            "name": "appName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Appname"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthStateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/tail/apps": {
+      "get": {
+        "tags": [
+          "Tail"
+        ],
+        "summary": "Get Apps Endpoint",
+        "operationId": "get_apps_endpoint",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableAppsResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/tail/users": {
+      "get": {
+        "tags": [
+          "Tail"
+        ],
+        "summary": "Get Users Endpoint",
+        "operationId": "get_users",
+        "parameters": [
+          {
+            "name": "searchQuery",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Searchquery"
+            }
+          },
+          {
+            "name": "emailId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Emailid"
+            }
+          },
+          {
+            "name": "raccoonPasscode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Raccoonpasscode"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 50,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "createdAt",
+                    "name",
+                    "email",
+                    "raccoonPasscode"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "createdAt",
+              "title": "Sortby"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ascend",
+                    "descend"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "descend",
+              "title": "Sortorder"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/lam/run": {
+      "post": {
+        "tags": [
+          "LAM"
+        ],
+        "summary": "Lam Run Endpoint",
+        "operationId": "lam_run",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LAMRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LAMResponse"
                 }
               },
               "text/event-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExtractResponse"
+                  "$ref": "#/components/schemas/LAMResponse"
                 }
               }
             }
@@ -303,7 +1155,7 @@
     "/lam/{app_name}/run": {
       "post": {
         "tags": [
-          "Integration"
+          "LAM"
         ],
         "summary": "Lam Integrations Endpoint",
         "operationId": "lam_integration",
@@ -413,22 +1265,420 @@
           "proxy": {
             "anyOf": [
               {
+                "$ref": "#/components/schemas/ProxySettings"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Proxy details for the browser session.",
+            "default": {
+              "enable": false,
+              "country": "",
+              "city": "",
+              "state": "",
+              "zip": 0
+            },
+            "example": {
+              "city": "sanfrancisco",
+              "country": "us",
+              "enable": true,
+              "state": "ca",
+              "zip": 94102
+            }
+          },
+          "extension_ids": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extension Ids",
+            "description": "list of extension ids",
+            "default": [],
+            "example": [
+              "df2399ea-a938-438f-9d4b-ef3bc95cf8af"
+            ]
+          }
+        },
+        "type": "object",
+        "title": "Advanced"
+      },
+      "AuthStateResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "unliked",
+              "active"
+            ],
+            "title": "Status",
+            "description": "Authentication status.",
+            "examples": [
+              "active"
+            ]
+          },
+          "appName": {
+            "type": "string",
+            "title": "Appname",
+            "description": "The name of the app for which the authentication status is checked",
+            "examples": [
+              "my_awesome_app"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "appName"
+        ],
+        "title": "AuthStateResponse"
+      },
+      "AvailableApp": {
+        "properties": {
+          "icon": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon",
+            "description": "URL of the application icon.",
+            "examples": [
+              "https://example.com/app_icon.png"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "title": "Displayname",
+            "description": "Display name of the application.",
+            "examples": [
+              "My Awesome App"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Category of the application (e.g., 'Productivity', 'Social').",
+            "examples": [
+              "Productivity"
+            ]
+          },
+          "appName": {
+            "type": "string",
+            "title": "Appname",
+            "description": "Unique identifier for the application.",
+            "examples": [
+              "my_awesome_app"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Active",
+              "In Review",
+              "Not Accepted"
+            ],
+            "title": "Status",
+            "description": "Status of the application.",
+            "examples": [
+              "Active"
+            ]
+          },
+          "appUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Appurl",
+            "description": "URL of the application.",
+            "examples": [
+              "https://my-awesome-app.com"
+            ]
+          },
+          "appDescription": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Appdescription",
+            "description": "A brief description of the application.",
+            "examples": [
+              "This app helps you be more productive."
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "displayName",
+          "category",
+          "appName",
+          "status"
+        ],
+        "title": "AvailableApp"
+      },
+      "AvailableAppsResponse": {
+        "properties": {
+          "availableApps": {
+            "items": {
+              "$ref": "#/components/schemas/AvailableApp"
+            },
+            "type": "array",
+            "title": "Availableapps",
+            "description": "List of available applications.",
+            "examples": [
+              [
+                {
+                  "appDescription": "This app helps you be more productive.",
+                  "appName": "my_awesome_app",
+                  "appUrl": "https://my-awesome-app.com",
+                  "category": "Productivity",
+                  "displayName": "My Awesome App",
+                  "icon": "https://example.com/app_icon.png",
+                  "status": "active"
+                }
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "availableApps"
+        ],
+        "title": "AvailableAppsResponse"
+      },
+      "Body_upload_extension": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_extension"
+      },
+      "ExtensionListResponse": {
+        "properties": {
+          "extensions": {
+            "items": {
+              "$ref": "#/components/schemas/ExtensionResponse"
+            },
+            "type": "array",
+            "title": "Extensions",
+            "description": "List of extensions.",
+            "examples": [
+              [
+                {
+                  "extensionId": "ext_abcdef123456",
+                  "filename": "my_extension.zip"
+                }
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "extensions"
+        ],
+        "title": "ExtensionListResponse"
+      },
+      "ExtensionResponse": {
+        "properties": {
+          "extensionId": {
+            "type": "string",
+            "title": "Extensionid",
+            "description": "Unique identifier for the extension.",
+            "examples": [
+              "ext_abcdef123456"
+            ]
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename",
+            "description": "Name of the extension file.",
+            "examples": [
+              "my_extension.zip"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "extensionId",
+          "filename"
+        ],
+        "title": "ExtensionResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "IntegrationRequest": {
+        "properties": {
+          "properties": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Properties",
+            "description": "Additional properties or data related to the particular integration."
+          },
+          "integration_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Integration Id",
+            "description": "The unique identifier for the integration being called.",
+            "default": ""
+          },
+          "stream": {
+            "anyOf": [
+              {
                 "type": "boolean"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Proxy",
-            "description": "Whether to use a proxy for the browser session.",
-            "default": false,
-            "example": true
+            "title": "Stream",
+            "description": "Whether the response should be streamed back or not.",
+            "default": false
+          },
+          "raccoon_passcode": {
+            "type": "string",
+            "title": "Raccoon Passcode",
+            "description": "The raccoon passcode associated with the end user on behalf of which the call is being made."
+          },
+          "advanced": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Advanced"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
+            "default": {
+              "block_ads": false,
+              "solve_captchas": false,
+              "proxy": {
+                "city": "",
+                "country": "",
+                "enable": false,
+                "state": "",
+                "zip": 0
+              },
+              "extension_ids": []
+            },
+            "example": {
+              "block_ads": true,
+              "proxy": {
+                "city": "sanfrancisco",
+                "country": "us",
+                "enable": true,
+                "state": "ca",
+                "zip": 94102
+              },
+              "solve_captchas": true
+            }
           }
         },
         "type": "object",
-        "title": "Advanced"
+        "required": [
+          "raccoon_passcode"
+        ],
+        "title": "IntegrationRequest"
       },
-      "ExtractRequest": {
+      "IntegrationResponse": {
+        "properties": {
+          "task_status": {
+            "type": "string",
+            "enum": [
+              "STARTING",
+              "PROCESSING",
+              "DONE",
+              "HUMAN_INTERACTION",
+              "FAILURE"
+            ],
+            "title": "Task Status",
+            "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
+            "example": "DONE"
+          },
+          "integration_id": {
+            "type": "string",
+            "title": "Integration Id",
+            "description": "A unique identifier for the integration in use.",
+            "example": "integration_12345"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "A message providing the thought summary if the status is processing currently.",
+            "example": "Record added successfully."
+          },
+          "properties": {
+            "type": "object",
+            "title": "Properties",
+            "description": "Additional metadata or details related to the integration task.",
+            "example": {
+              "records_processed": 1500
+            }
+          },
+          "livestream_url": {
+            "type": "string",
+            "title": "Livestream Url",
+            "description": "The Livestream URL",
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
+          }
+        },
+        "type": "object",
+        "required": [
+          "task_status",
+          "integration_id",
+          "message",
+          "properties",
+          "livestream_url"
+        ],
+        "title": "IntegrationResponse"
+      },
+      "LAMRequest": {
         "properties": {
           "query": {
             "type": "string",
@@ -507,6 +1757,24 @@
             "default": false,
             "example": true
           },
+          "mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "deepsearch",
+                  "default"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode",
+            "description": "Mode of execution.",
+            "default": "default",
+            "example": "deepsearch"
+          },
           "raccoon_passcode": {
             "type": "string",
             "title": "Raccoon Passcode",
@@ -526,11 +1794,24 @@
             "default": {
               "block_ads": false,
               "solve_captchas": false,
-              "proxy": false
+              "proxy": {
+                "city": "",
+                "country": "",
+                "enable": false,
+                "state": "",
+                "zip": 0
+              },
+              "extension_ids": []
             },
             "example": {
               "block_ads": true,
-              "proxy": true,
+              "proxy": {
+                "city": "sanfrancisco",
+                "country": "us",
+                "enable": true,
+                "state": "ca",
+                "zip": 94102
+              },
               "solve_captchas": true
             }
           }
@@ -540,21 +1821,28 @@
           "query",
           "raccoon_passcode"
         ],
-        "title": "ExtractRequest"
+        "title": "LAMRequest"
       },
-      "ExtractResponse": {
+      "LAMResponse": {
         "properties": {
           "task_status": {
             "type": "string",
+            "enum": [
+              "STARTING",
+              "PROCESSING",
+              "DONE",
+              "HUMAN_INTERACTION",
+              "FAILURE"
+            ],
             "title": "Task Status",
             "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
-            "example": "PROCESSING"
+            "example": "DONE"
           },
           "message": {
             "type": "string",
             "title": "Message",
             "description": "A message providing the thought summary if the status is processing currently.",
-            "example": "I am applying W24 filter in startup directory to find the relevant companies."
+            "example": "The price of iPhone 16 on Amazon is $729.97."
           },
           "data": {
             "items": {
@@ -585,9 +1873,8 @@
           "properties": {
             "type": "object",
             "title": "Properties",
-            "description": "Additional metadata or information related to the extraction task.",
+            "description": "Additional metadata or details related to the run task.",
             "example": {
-              "record_count": 2,
               "sessionId": "1234"
             }
           },
@@ -595,7 +1882,7 @@
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
           }
         },
         "type": "object",
@@ -606,263 +1893,247 @@
           "properties",
           "livestream_url"
         ],
-        "title": "ExtractResponse"
+        "title": "LAMResponse"
       },
-      "HTTPValidationError": {
+      "LinkedAppsResponse": {
         "properties": {
-          "detail": {
+          "linkedApps": {
             "items": {
-              "$ref": "#/components/schemas/ValidationError"
+              "type": "string"
             },
             "type": "array",
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "title": "HTTPValidationError"
-      },
-      "IntegrationRequest": {
-        "properties": {
-          "properties": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Properties",
-            "description": "Additional properties or data related to the particular integration."
-          },
-          "integration_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Integration Id",
-            "description": "The unique identifier for the integration being called.",
-            "default": ""
-          },
-          "stream": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Stream",
-            "description": "Whether the response should be streamed back or not.",
-            "default": false
-          },
-          "raccoon_passcode": {
-            "type": "string",
-            "title": "Raccoon Passcode",
-            "description": "The raccoon passcode associated with the end user on behalf of which the call is being made."
-          },
-          "advanced": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Advanced"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
-            "default": {
-              "block_ads": false,
-              "solve_captchas": false,
-              "proxy": false
-            },
-            "example": {
-              "block_ads": true,
-              "proxy": true,
-              "solve_captchas": true
-            }
+            "title": "Linkedapps",
+            "description": "List of linked application names.",
+            "examples": [
+              [
+                "app1",
+                "app2",
+                "app3"
+              ]
+            ]
           }
         },
         "type": "object",
         "required": [
-          "raccoon_passcode"
+          "linkedApps"
         ],
-        "title": "IntegrationRequest"
+        "title": "LinkedAppsResponse"
       },
-      "IntegrationResponse": {
+      "Meta": {
         "properties": {
-          "task_status": {
-            "type": "string",
-            "title": "Task Status",
-            "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
-            "example": "DONE"
+          "totalPages": {
+            "type": "integer",
+            "title": "Totalpages",
+            "description": "Total number of pages available.",
+            "examples": [
+              5
+            ]
           },
-          "integration_id": {
-            "type": "string",
-            "title": "Integration Id",
-            "description": "A unique identifier for the integration in use.",
-            "example": "integration_12345"
+          "totalRecords": {
+            "type": "integer",
+            "title": "Totalrecords",
+            "description": "Total number of records across all pages.",
+            "examples": [
+              50
+            ]
           },
-          "message": {
-            "type": "string",
-            "title": "Message",
-            "description": "A message providing the thought summary if the status is processing currently.",
-            "example": "Record added successfully."
-          },
-          "properties": {
-            "type": "object",
-            "title": "Properties",
-            "description": "Additional metadata or details related to the integration task.",
-            "example": {
-              "records_processed": 1500
-            }
-          },
-          "livestream_url": {
-            "type": "string",
-            "title": "Livestream Url",
-            "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+          "currentPage": {
+            "type": "integer",
+            "title": "Currentpage",
+            "description": "The current page number.",
+            "examples": [
+              1
+            ]
           }
         },
         "type": "object",
         "required": [
-          "task_status",
-          "integration_id",
-          "message",
-          "properties",
-          "livestream_url"
+          "totalPages",
+          "totalRecords",
+          "currentPage"
         ],
-        "title": "IntegrationResponse"
+        "title": "Meta"
       },
-      "RunRequest": {
+      "ProxySettings": {
         "properties": {
-          "query": {
-            "type": "string",
-            "title": "Query",
-            "description": "The input query string for the request. This is typically the main prompt.",
-            "example": "Find the price of iphone 16 on Amazon."
-          },
-          "chat_history": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Chat History",
-            "description": "The history of the conversation as a list of messages or objects you might use while building a chat app to give the model context of the past conversation.",
-            "example": []
-          },
-          "app_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "App Url",
-            "description": "This is the entrypoint URL for the web agent.",
-            "default": "",
-            "example": "https://www.amazon.com"
-          },
-          "stream": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Stream",
-            "description": "Whether the response should be streamed back or not.",
+          "enable": {
+            "type": "boolean",
+            "title": "Enable",
+            "description": "Whether to use a proxy for the browser session.",
             "default": false,
             "example": true
           },
-          "raccoon_passcode": {
-            "type": "string",
-            "title": "Raccoon Passcode",
-            "description": "The raccoon passcode associated with the end user on behalf of which the call is being made.",
-            "example": "<end-user-raccoon-passcode>"
-          },
-          "advanced": {
+          "country": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/Advanced"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "description": "Advanced configuration options for the session, such as ad-blocking and CAPTCHA solving.",
-            "default": {
-              "block_ads": false,
-              "solve_captchas": false,
-              "proxy": false
-            },
-            "example": {
-              "block_ads": true,
-              "proxy": true,
-              "solve_captchas": true
-            }
+            "title": "Country",
+            "description": "Target country (2-letter ISO code).",
+            "default": "",
+            "example": "us"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City",
+            "description": "Target city.",
+            "default": "",
+            "example": "sf"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State",
+            "description": "Target state (2-letter code).",
+            "default": "",
+            "example": "ca"
+          },
+          "zip": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zip",
+            "description": "Target postal code.",
+            "default": 0,
+            "example": 90210
           }
         },
         "type": "object",
-        "required": [
-          "query",
-          "raccoon_passcode"
-        ],
-        "title": "RunRequest"
+        "title": "ProxySettings"
       },
-      "RunResponse": {
+      "Session": {
         "properties": {
-          "task_status": {
+          "sessionId": {
             "type": "string",
-            "title": "Task Status",
-            "description": "The current status of the extraction task. For example: 'STARTING', 'PROCESSING', 'DONE', 'HUMAN_INTERACTION', or 'FAILURE'.",
-            "example": "DONE"
+            "title": "Sessionid",
+            "description": "Unique identifier for the session.",
+            "examples": [
+              "session_xyz789012"
+            ]
           },
-          "message": {
+          "executionType": {
             "type": "string",
-            "title": "Message",
-            "description": "A message providing the thought summary if the status is processing currently.",
-            "example": "The price of iPhone 16 on Amazon is $729.97."
+            "enum": [
+              "run",
+              "extract",
+              "fleet"
+            ],
+            "title": "Executiontype",
+            "description": "The type of execution performed (e.g., 'run', 'extract').",
+            "examples": [
+              "extract"
+            ]
           },
-          "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failure",
+              "running"
+            ],
+            "title": "Status",
+            "description": "Current status of the session.",
+            "examples": [
+              "success"
+            ]
+          },
+          "inputs": {
             "type": "object",
-            "title": "Properties",
-            "description": "Additional metadata or details related to the run task.",
-            "example": {
-              "sessionId": "1234"
-            }
+            "title": "Inputs",
+            "description": "Input parameters used for the session.",
+            "examples": [
+              {
+                "param2": "value2",
+                "url": "https://another-example.com"
+              }
+            ]
           },
-          "livestream_url": {
+          "output": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Output",
+            "description": "Output generated by the session.",
+            "examples": [
+              [
+                {
+                  "extracted_data1": "value1"
+                },
+                {
+                  "extracted_data2": "value2"
+                }
+              ]
+            ]
+          },
+          "raccoonPasscode": {
             "type": "string",
-            "title": "Livestream Url",
-            "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "title": "Raccoonpasscode",
+            "description": "Passcode associated with the user.",
+            "examples": [
+              "raccoon_secret_456"
+            ]
+          },
+          "taskId": {
+            "type": "string",
+            "title": "Taskid",
+            "description": "Unique identifier for the associated task.",
+            "examples": [
+              "task_abcdef123456"
+            ]
+          },
+          "executionTime": {
+            "type": "integer",
+            "title": "Executiontime",
+            "description": "Time taken for the session execution (in milliseconds).",
+            "examples": [
+              30000
+            ]
+          },
+          "timestamp": {
+            "type": "integer",
+            "title": "Timestamp",
+            "description": "Unix timestamp (in milliseconds) indicating when the session was created.",
+            "examples": [
+              1678972800000
+            ]
           }
         },
         "type": "object",
         "required": [
-          "task_status",
-          "message",
-          "properties",
-          "livestream_url"
+          "sessionId",
+          "executionType",
+          "status",
+          "inputs",
+          "output",
+          "raccoonPasscode",
+          "taskId",
+          "executionTime",
+          "timestamp"
         ],
-        "title": "RunResponse"
+        "title": "Session"
       },
       "SessionCreateResponse": {
         "properties": {
@@ -882,12 +2153,19 @@
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
+            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
           },
           "status": {
             "type": "string",
+            "enum": [
+              "starting",
+              "running",
+              "terminated",
+              "completed",
+              "unknown"
+            ],
             "title": "Status",
-            "description": "The current status of the session. Possible values include 'running', 'unknown', or 'terminated'.",
+            "description": "The current status of the session.",
             "example": "running"
           }
         },
@@ -899,6 +2177,53 @@
           "status"
         ],
         "title": "SessionCreateResponse"
+      },
+      "SessionListResponse": {
+        "properties": {
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/Session"
+            },
+            "type": "array",
+            "title": "Sessions",
+            "description": "List of sessions.",
+            "examples": [
+              [
+                {
+                  "executionTime": 30,
+                  "executionType": "extract",
+                  "inputs": {
+                    "param2": "value2",
+                    "url": "https://another-example.com"
+                  },
+                  "output": [
+                    {
+                      "extracted_data1": "value1"
+                    },
+                    {
+                      "extracted_data2": "value2"
+                    }
+                  ],
+                  "raccoonPasscode": "raccoon_secret_456",
+                  "sessionId": "session_xyz789012",
+                  "status": "completed",
+                  "taskId": "task_abcdef123456",
+                  "timestamp": 1678972800
+                }
+              ]
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta",
+            "description": "Metadata about the session list."
+          }
+        },
+        "type": "object",
+        "required": [
+          "sessions",
+          "meta"
+        ],
+        "title": "SessionListResponse"
       },
       "SessionLogsResponse": {
         "properties": {
@@ -937,19 +2262,6 @@
             "description": "The raccoon passcode associated with the end user on behalf of which the call is being made if any.",
             "example": "<end-user-raccoon-passcode>"
           },
-          "app_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "App Name",
-            "description": "The name of the app for which the session is going to run for, used for streamlining authentication.",
-            "example": "uber"
-          },
           "url": {
             "anyOf": [
               {
@@ -967,7 +2279,12 @@
           "browser_type": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "chromium",
+                  "firefox",
+                  "webkit"
+                ]
               },
               {
                 "type": "null"
@@ -1022,11 +2339,24 @@
             "default": {
               "block_ads": false,
               "solve_captchas": false,
-              "proxy": false
+              "proxy": {
+                "city": "",
+                "country": "",
+                "enable": false,
+                "state": "",
+                "zip": 0
+              },
+              "extension_ids": []
             },
             "example": {
               "block_ads": true,
-              "proxy": true,
+              "proxy": {
+                "city": "sanfrancisco",
+                "country": "us",
+                "enable": true,
+                "state": "ca",
+                "zip": 94102
+              },
               "solve_captchas": true
             }
           },
@@ -1072,8 +2402,15 @@
           },
           "status": {
             "type": "string",
+            "enum": [
+              "starting",
+              "running",
+              "terminated",
+              "completed",
+              "unknown"
+            ],
             "title": "Status",
-            "description": "The current status of the session. Possible values include 'running', 'unknown', or 'terminated'.",
+            "description": "The current status of the session.",
             "example": "terminated"
           }
         },
@@ -1147,6 +2484,234 @@
         },
         "type": "object",
         "title": "Settings"
+      },
+      "Task": {
+        "properties": {
+          "executionType": {
+            "type": "string",
+            "enum": [
+              "run",
+              "extract"
+            ],
+            "title": "Executiontype",
+            "description": "The type of execution performed (e.g., 'run', 'extract').",
+            "examples": [
+              "run"
+            ]
+          },
+          "raccoonPasscode": {
+            "type": "string",
+            "title": "Raccoonpasscode",
+            "description": "Passcode associated with the user.",
+            "examples": [
+              "raccoon_secret_123"
+            ]
+          },
+          "inputs": {
+            "type": "object",
+            "title": "Inputs",
+            "description": "Input parameters used for the task execution.",
+            "examples": [
+              {
+                "param1": "value1",
+                "url": "https://example.com"
+              }
+            ]
+          },
+          "taskId": {
+            "type": "string",
+            "title": "Taskid",
+            "description": "Unique identifier for the task.",
+            "examples": [
+              "task_abcdef123456"
+            ]
+          },
+          "timestamp": {
+            "type": "integer",
+            "title": "Timestamp",
+            "description": "Unix timestamp (in seconds) indicating when the task was created.",
+            "examples": [
+              1678886400
+            ]
+          },
+          "executionTime": {
+            "type": "integer",
+            "title": "Executiontime",
+            "description": "Time taken for the task execution (in seconds).",
+            "examples": [
+              15
+            ]
+          },
+          "output": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Output",
+            "description": "Output generated by the task execution.",
+            "examples": [
+              [
+                {
+                  "result1": "data1"
+                },
+                {
+                  "result2": "data2"
+                }
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "executionType",
+          "raccoonPasscode",
+          "inputs",
+          "taskId",
+          "timestamp",
+          "executionTime",
+          "output"
+        ],
+        "title": "Task"
+      },
+      "TaskListResponse": {
+        "properties": {
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            },
+            "type": "array",
+            "title": "Tasks",
+            "description": "List of tasks.",
+            "examples": [
+              [
+                {
+                  "executionTime": 15,
+                  "executionType": "run",
+                  "inputs": {
+                    "param1": "value1",
+                    "url": "https://example.com"
+                  },
+                  "output": [
+                    {
+                      "result1": "data1"
+                    },
+                    {
+                      "result2": "data2"
+                    }
+                  ],
+                  "raccoonPasscode": "raccoon_secret_123",
+                  "taskId": "task_abcdef123456",
+                  "timestamp": 1678886400
+                }
+              ]
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta",
+            "description": "Metadata about the task list."
+          }
+        },
+        "type": "object",
+        "required": [
+          "tasks",
+          "meta"
+        ],
+        "title": "TaskListResponse"
+      },
+      "User": {
+        "properties": {
+          "raccoonPasscode": {
+            "type": "string",
+            "title": "Raccoonpasscode",
+            "description": "Passcode associated with the user.",
+            "examples": [
+              "user_raccoon_789"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "User's email address.",
+            "examples": [
+              "john.doe@example.com"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "User's full name.",
+            "examples": [
+              "John Doe"
+            ]
+          },
+          "createdAt": {
+            "type": "integer",
+            "title": "Createdat",
+            "description": "Unix timestamp (in milliseconds) indicating when the user account was created.",
+            "examples": [
+              1678800000000
+            ]
+          },
+          "avatar": {
+            "type": "string",
+            "title": "Avatar",
+            "description": "URL of the user's avatar image.",
+            "examples": [
+              "https://example.com/avatar.jpg"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "raccoonPasscode",
+          "email",
+          "name",
+          "createdAt",
+          "avatar"
+        ],
+        "title": "User"
+      },
+      "UserListResponse": {
+        "properties": {
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "type": "array",
+            "title": "Users",
+            "description": "List of users.",
+            "examples": [
+              [
+                {
+                  "avatar": "https://example.com/avatar.jpg",
+                  "createdAt": 1678800000,
+                  "email": "john.doe@example.com",
+                  "name": "John Doe",
+                  "raccoonPasscode": "user_raccoon_789"
+                }
+              ]
+            ]
+          },
+          "adminRaccoonPasscode": {
+            "type": "string",
+            "title": "Adminraccoonpasscode",
+            "description": "Admin Raccoon passcode.",
+            "examples": [
+              "admin_secret"
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta",
+            "description": "Metadata about the user list."
+          }
+        },
+        "type": "object",
+        "required": [
+          "users",
+          "adminRaccoonPasscode",
+          "meta"
+        ],
+        "title": "UserListResponse"
       },
       "ValidationError": {
         "properties": {

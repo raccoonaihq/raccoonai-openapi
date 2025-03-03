@@ -2,4 +2,4 @@
 
 OpenAPI spec for Raccoon APIs!
 
-**Note:** This project is currently a **work in progress**, and updates will be made frequently to improve coverage and clarity.
+**Note:** Updates are being made frequently to improve coverage and clarity. If you encounter any problems while using the API or something seems missing, feel free to raise an issue in this repository.
