@@ -7,16 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.flyingraccoon.tech",
-      "description": "Production"
-    },
-    {
-      "url": "https://staging.flyingraccoon.tech",
-      "description": "Staging"
-    },
-    {
-      "url": "http://localhost:8080",
-      "description": "Local"
+      "url": "https://api.flyingraccoon.tech"
     }
   ],
   "paths": {
@@ -1199,6 +1190,150 @@
         ]
       }
     },
+    "/tail/users/create": {
+      "post": {
+        "tags": [
+          "Tail"
+        ],
+        "summary": "Create User Endpoint",
+        "operationId": "create_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/lam/tasks/{taskId}/media": {
+      "get": {
+        "tags": [
+          "LAM"
+        ],
+        "summary": "Get Task Media Endpoint",
+        "operationId": "get_task_media",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the task",
+              "title": "Taskid"
+            },
+            "description": "The ID of the task"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskMediaResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
+    "/sessions/{sessionId}/media": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "summary": "Get Session Media Endpoint",
+        "operationId": "get_session_media",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The ID of the session",
+              "title": "Sessionid"
+            },
+            "description": "The ID of the session"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionMediaResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "raccoon-secret-key": []
+          }
+        ]
+      }
+    },
     "/lam/run": {
       "post": {
         "tags": [
@@ -1330,6 +1465,41 @@
   },
   "components": {
     "schemas": {
+      "Action": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "title": "Action",
+            "description": "The type of action performed, e.g., 'click'.",
+            "examples": [
+              "click"
+            ]
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index",
+            "description": "The sequential index of the action.",
+            "examples": [
+              1
+            ]
+          },
+          "screenshot": {
+            "type": "string",
+            "title": "Screenshot",
+            "description": "URL of the screenshot taken at the time of the action.",
+            "examples": [
+              "https://example.com/screenshot1.png"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "index",
+          "screenshot"
+        ],
+        "title": "Action"
+      },
       "Advanced": {
         "properties": {
           "block_ads": {
@@ -1548,7 +1718,7 @@
                   "category": "Productivity",
                   "displayName": "My Awesome App",
                   "icon": "https://example.com/app_icon.png",
-                  "status": "active"
+                  "status": "Active"
                 }
               ]
             ]
@@ -1573,6 +1743,76 @@
           "file"
         ],
         "title": "Body_upload_extension"
+      },
+      "CreateUserRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "specify name of user.",
+            "examples": [
+              "john"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "specify email of user.",
+            "examples": [
+              "john.doe@example.com"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "email"
+        ],
+        "title": "CreateUserRequest"
+      },
+      "CreateUserResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "If user was created successfully.",
+            "examples": [
+              true
+            ]
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Name of the created user.",
+            "examples": [
+              "john"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "description": "Email of the created user.",
+            "examples": [
+              "jonh@appleseed.com"
+            ]
+          },
+          "raccoonPasscode": {
+            "type": "string",
+            "title": "Raccoonpasscode",
+            "description": "Raccoon passcode associated with the user.",
+            "examples": [
+              "raccoon123"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "name",
+          "email",
+          "raccoonPasscode"
+        ],
+        "title": "CreateUserResponse"
       },
       "ExtensionListResponse": {
         "properties": {
@@ -2121,6 +2361,41 @@
         "type": "object",
         "title": "ProxySettings"
       },
+      "Recording": {
+        "properties": {
+          "pageTitle": {
+            "type": "string",
+            "title": "Pagetitle",
+            "description": "The title of the webpage where the recording took place.",
+            "examples": [
+              "Google"
+            ]
+          },
+          "pageUrl": {
+            "type": "string",
+            "title": "Pageurl",
+            "description": "The URL of the webpage where the recording took place.",
+            "examples": [
+              "https://www.google.com/"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "URL of the recording file.",
+            "examples": [
+              "https://example.com/recording.webm"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "pageTitle",
+          "pageUrl",
+          "url"
+        ],
+        "title": "Recording"
+      },
       "Session": {
         "properties": {
           "sessionId": {
@@ -2304,7 +2579,7 @@
                   ],
                   "raccoonPasscode": "raccoon_secret_456",
                   "sessionId": "session_xyz789012",
-                  "status": "completed",
+                  "status": "success",
                   "taskId": "task_abcdef123456",
                   "timestamp": 1678972800
                 }
@@ -2344,6 +2619,59 @@
           "session_logs"
         ],
         "title": "SessionLogsResponse"
+      },
+      "SessionMediaResponse": {
+        "properties": {
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            },
+            "type": "array",
+            "title": "Actions",
+            "description": "A list of actions performed, not applicable to fleet sessions.",
+            "examples": [
+              [
+                {
+                  "action": "click",
+                  "index": 1,
+                  "screenshot": "https://example.com/screenshot1.png"
+                }
+              ]
+            ]
+          },
+          "recordings": {
+            "items": {
+              "$ref": "#/components/schemas/Recording"
+            },
+            "type": "array",
+            "title": "Recordings",
+            "description": "A list of recordings associated.",
+            "examples": [
+              [
+                {
+                  "pageTitle": "Example Page",
+                  "pageUrl": "https://example.com",
+                  "url": "https://example.com/recording1.webm"
+                }
+              ]
+            ]
+          },
+          "sessionId": {
+            "type": "string",
+            "title": "Sessionid",
+            "description": "A unique identifier for the session.",
+            "examples": [
+              "session-12345"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "actions",
+          "recordings",
+          "sessionId"
+        ],
+        "title": "SessionMediaResponse"
       },
       "SessionRequest": {
         "properties": {
@@ -2715,6 +3043,53 @@
           "meta"
         ],
         "title": "TaskListResponse"
+      },
+      "TaskMediaResponse": {
+        "properties": {
+          "media": {
+            "items": {
+              "$ref": "#/components/schemas/SessionMediaResponse"
+            },
+            "type": "array",
+            "title": "Media",
+            "description": "A list of media data, including actions and recordings.",
+            "examples": [
+              [
+                {
+                  "actions": [
+                    {
+                      "action": "click",
+                      "index": 1,
+                      "screenshot": "https://example.com/screenshot1.png"
+                    }
+                  ],
+                  "recordings": [
+                    {
+                      "pageTitle": "Example Page",
+                      "pageUrl": "https://example.com",
+                      "url": "https://example.com/recording1.webm"
+                    }
+                  ],
+                  "sessionId": "session123"
+                }
+              ]
+            ]
+          },
+          "taskId": {
+            "type": "string",
+            "title": "Taskid",
+            "description": "A unique identifier for the task.",
+            "examples": [
+              "task-abcde"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "media",
+          "taskId"
+        ],
+        "title": "TaskMediaResponse"
       },
       "User": {
         "properties": {
