@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Raccoon AI API",
-    "description": "The Raccoon AI REST API. Find the documentation here: https://docs.flyingraccoon.tech/",
+    "description": "The Raccoon AI REST API. Find the documentation here: https://docs.raccoonai.tech/",
     "version": "0.1.0"
   },
   "servers": [
     {
-      "url": "https://api.flyingraccoon.tech"
+      "url": "https://api.raccoonai.tech"
     }
   ],
   "paths": {
@@ -326,8 +326,8 @@
                   "type": "array",
                   "items": {
                     "enum": [
-                      "run",
-                      "extract",
+                      "default",
+                      "deepsearch",
                       "fleet"
                     ],
                     "type": "string"
@@ -337,16 +337,16 @@
                   "type": "null"
                 }
               ],
-              "description": "Filter tasks by execution type (e.g., 'run', 'extract').",
+              "description": "Filter tasks by execution type (e.g., 'default', 'deepsearch').",
               "examples": [
                 [
-                  "run",
-                  "extract"
+                  "default",
+                  "deepsearch"
                 ]
               ],
               "title": "Executiontype[]"
             },
-            "description": "Filter tasks by execution type (e.g., 'run', 'extract')."
+            "description": "Filter tasks by execution type (e.g., 'default', 'deepsearch')."
           },
           {
             "name": "sort_by",
@@ -603,8 +603,8 @@
                   "type": "array",
                   "items": {
                     "enum": [
-                      "run",
-                      "extract",
+                      "default",
+                      "deepsearch",
                       "fleet"
                     ],
                     "type": "string"
@@ -614,15 +614,15 @@
                   "type": "null"
                 }
               ],
-              "description": "Filter sessions by execution type (e.g., 'run', 'extract').",
+              "description": "Filter sessions by execution type (e.g., 'default', 'deepsearch').",
               "examples": [
                 [
-                  "run"
+                  "default"
                 ]
               ],
               "title": "Executiontype[]"
             },
-            "description": "Filter sessions by execution type (e.g., 'run', 'extract')."
+            "description": "Filter sessions by execution type (e.g., 'default', 'deepsearch')."
           },
           {
             "name": "sort_by",
@@ -1536,24 +1536,22 @@
                 "$ref": "#/components/schemas/ProxySettings"
               },
               {
-                "type": "null"
+                "type": "boolean"
               }
             ],
-            "description": "Proxy details for the browser session.",
-            "default": {
-              "enable": false,
-              "country": "",
-              "city": "",
-              "state": "",
-              "zip": 0
-            },
-            "example": {
-              "city": "sanfrancisco",
-              "country": "us",
-              "enable": true,
-              "state": "ca",
-              "zip": 94102
-            }
+            "title": "Proxy",
+            "description": "Proxy details for the browser session. Automatically defaults to True if solve_captchas is on.",
+            "default": false,
+            "examples": [
+              {
+                "city": "sanfrancisco",
+                "country": "us",
+                "state": "ca",
+                "zip": 94102
+              },
+              true,
+              false
+            ]
           },
           "extension_ids": {
             "anyOf": [
@@ -1936,13 +1934,7 @@
             "default": {
               "block_ads": false,
               "solve_captchas": false,
-              "proxy": {
-                "city": "",
-                "country": "",
-                "enable": false,
-                "state": "",
-                "zip": 0
-              },
+              "proxy": false,
               "extension_ids": []
             },
             "example": {
@@ -1950,7 +1942,6 @@
               "proxy": {
                 "city": "sanfrancisco",
                 "country": "us",
-                "enable": true,
                 "state": "ca",
                 "zip": 94102
               },
@@ -2003,7 +1994,7 @@
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
+            "example": "https://api.raccoonai.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           }
         },
         "type": "object",
@@ -2132,13 +2123,7 @@
             "default": {
               "block_ads": false,
               "solve_captchas": false,
-              "proxy": {
-                "city": "",
-                "country": "",
-                "enable": false,
-                "state": "",
-                "zip": 0
-              },
+              "proxy": false,
               "extension_ids": []
             },
             "example": {
@@ -2146,7 +2131,6 @@
               "proxy": {
                 "city": "sanfrancisco",
                 "country": "us",
-                "enable": true,
                 "state": "ca",
                 "zip": 94102
               },
@@ -2220,7 +2204,7 @@
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
+            "example": "https://api.raccoonai.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           }
         },
         "type": "object",
@@ -2294,13 +2278,6 @@
       },
       "ProxySettings": {
         "properties": {
-          "enable": {
-            "type": "boolean",
-            "title": "Enable",
-            "description": "Whether to use a proxy for the browser session.",
-            "default": false,
-            "example": true
-          },
           "country": {
             "anyOf": [
               {
@@ -2312,7 +2289,7 @@
             ],
             "title": "Country",
             "description": "Target country (2-letter ISO code).",
-            "default": "",
+            "default": "us",
             "example": "us"
           },
           "city": {
@@ -2326,8 +2303,7 @@
             ],
             "title": "City",
             "description": "Target city.",
-            "default": "",
-            "example": "sf"
+            "example": "sanfrancisco"
           },
           "state": {
             "anyOf": [
@@ -2340,7 +2316,6 @@
             ],
             "title": "State",
             "description": "Target state (2-letter code).",
-            "default": "",
             "example": "ca"
           },
           "zip": {
@@ -2354,7 +2329,6 @@
             ],
             "title": "Zip",
             "description": "Target postal code.",
-            "default": 0,
             "example": 90210
           }
         },
@@ -2409,14 +2383,14 @@
           "executionType": {
             "type": "string",
             "enum": [
-              "run",
-              "extract",
+              "default",
+              "deepsearch",
               "fleet"
             ],
             "title": "Executiontype",
-            "description": "The type of execution performed (e.g., 'run', 'extract').",
+            "description": "The type of execution performed (e.g., 'default', 'deepsearch').",
             "examples": [
-              "extract"
+              "deepsearch"
             ]
           },
           "status": {
@@ -2520,13 +2494,13 @@
             "type": "string",
             "title": "Websocket Url",
             "description": "The WebSocket URL for interacting with the session.",
-            "example": "wss://connect.flyingraccoon.tech/ws/6000?sessionId=session_12345"
+            "example": "wss://connect.raccoonai.tech/ws/6000?sessionId=session_12345"
           },
           "livestream_url": {
             "type": "string",
             "title": "Livestream Url",
             "description": "The Livestream URL",
-            "example": "https://api.flyingraccoon.tech/sessions/session_12345/stream?enable_actions=true&theme=raccoon-dark"
+            "example": "https://api.raccoonai.tech/sessions/session_12345/stream?enable_actions=true&theme=dark"
           },
           "status": {
             "type": "string",
@@ -2535,7 +2509,9 @@
               "running",
               "terminated",
               "completed",
-              "unknown"
+              "unknown",
+              "success",
+              "failure"
             ],
             "title": "Status",
             "description": "The current status of the session.",
@@ -2564,7 +2540,7 @@
               [
                 {
                   "executionTime": 30,
-                  "executionType": "extract",
+                  "executionType": "deepsearch",
                   "inputs": {
                     "param2": "value2",
                     "url": "https://another-example.com"
@@ -2765,13 +2741,7 @@
             "default": {
               "block_ads": false,
               "solve_captchas": false,
-              "proxy": {
-                "city": "",
-                "country": "",
-                "enable": false,
-                "state": "",
-                "zip": 0
-              },
+              "proxy": false,
               "extension_ids": []
             },
             "example": {
@@ -2779,7 +2749,6 @@
               "proxy": {
                 "city": "sanfrancisco",
                 "country": "us",
-                "enable": true,
                 "state": "ca",
                 "zip": 94102
               },
@@ -2916,13 +2885,13 @@
           "executionType": {
             "type": "string",
             "enum": [
-              "run",
-              "extract"
+              "default",
+              "deepsearch"
             ],
             "title": "Executiontype",
-            "description": "The type of execution performed (e.g., 'run', 'extract').",
+            "description": "The type of execution performed (e.g., 'default', 'deepsearch').",
             "examples": [
-              "run"
+              "default"
             ]
           },
           "raccoonPasscode": {
@@ -3012,7 +2981,7 @@
               [
                 {
                   "executionTime": 15,
-                  "executionType": "run",
+                  "executionType": "default",
                   "inputs": {
                     "param1": "value1",
                     "url": "https://example.com"
